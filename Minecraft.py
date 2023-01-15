@@ -1,7 +1,6 @@
 import pygame
 import sys
 from pygame.locals import *
-from random import randint
 
 width = 1200
 height = 900
@@ -35,6 +34,5 @@ while True:
 			sys.exit()
 
 	screen.fill((255, 255, 255))
-	# print(player.y)
 	clock.tick(60)
 	pygame.display.update()
