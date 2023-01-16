@@ -70,7 +70,7 @@ hand_dia_image_135 = pygame.transform.rotate(hand_dia_image, 45)
 # hand_dia_image_45_flip = pygame.transform.flip(hand_dia_image_45, True, False)
 # hand_dia_image_90_flip = pygame.transform.flip(hand_dia_image_90, True, False)
 # hand_dia_image_135_flip = pygame.transform.flip(hand_dia_image_135, True, False)
-
+# 리스트에 넣어서 for i in range를 이용하여 인덱싱으로 맞춘다.
 steve_hand_image = hand_wood_image
 
 steve = pygame.Rect(600, 450, 24, 100)
