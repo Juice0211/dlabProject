@@ -1,4 +1,3 @@
-import pygame
 import sys
 from pygame.locals import *
 from hand import *
@@ -13,8 +12,11 @@ pygame.init()
 screen = pygame.display.set_mode((width, height))
 clock = pygame.time.Clock()
 
+
 class Block:
 	def __init__(self, block_name):
+		self.distance = 0
+		self.x = 0
 		self.y = 0
 		self.block_name = block_name
 		self.rect = pygame.Rect(0, 0, 50, 50)
@@ -24,7 +26,7 @@ class Block:
 		self.hide = False
 
 	def draw(self):
-		if self.hide == False:
+		if not self.hide:
 			screen.blit(self.image, self.rect)
 
 	def check_mouse(self):
@@ -45,10 +47,13 @@ class Block:
 
 		else:
 			self.y = 0
+
 	def set_x(self):
 		self.rect.x = 50
+
 	def set_y(self):
 		self.rect.y = 900 - (9 * self.y)
+
 
 coal = Block('coal')
 iron = Block('iron')
@@ -138,7 +143,7 @@ while True:
 
 	screen.fill((255, 255, 255))
 	clock.tick(60)
-	if Open_store == False:
+	if not Open_store:
 		for i in block_list:
 			i.set_x()
 			i.set_y()
