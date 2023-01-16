@@ -30,9 +30,20 @@ class Block:
 			screen.blit(self.image, self.rect)
 
 	def check_mouse(self):
-		self.distance = round(math.sqrt(((steve.centerx -self.rect.centerx) ** 2) + ((steve.top -self.rect.centery) ** 2)))
-		if round(self.distance) < 200:
-			return True
+		if steve_image_now == steve_image:
+			if self.rect.left >= steve.right:
+				self.distance = round(math.sqrt(((steve.centerx -self.rect.centerx) ** 2) + ((steve.top -self.rect.centery) ** 2)))
+				if self.distance < 200:
+					return True
+			else:
+				return False
+		if steve_image_now == steve_image_flip:
+			if self.rect.right <= steve.left:
+				self.distance = round(math.sqrt(((steve.centerx - self.rect.centerx) ** 2) + ((steve.top - self.rect.centery) ** 2)))
+				if self.distance < 200:
+					return True
+			else:
+				return False
 
 	def set_border(self):
 		if self.rect.collidepoint(pygame.mouse.get_pos()) and self.hide == False:
@@ -82,33 +93,15 @@ steve_image_now = steve_image
 
 Open_store = False
 
-if steve_hand_image == hand_wood_image_45 or steve_hand_image == hand_stone_image_45 or steve_hand_image == hand_iron_image_45 or steve_hand_image == hand_dia_image_45:
-	steve_hand.left = 568
-	steve_hand.top = 318
-
-if steve_hand_image == hand_wood_image_90 or steve_hand_image == hand_stone_image_90 or steve_hand_image == hand_iron_image_90 or steve_hand_image == hand_dia_image_90:
-	steve_hand.left = 595
-	steve_hand.top = 338
-
-if steve_hand_image == hand_wood_image_135 or steve_hand_image == hand_stone_image_135 or steve_hand_image == hand_iron_image_135 or steve_hand_image == hand_dia_image_135:
-	steve_hand.left = 594
-	steve_hand.top = 348
-
-if steve_hand_image == hand_wood_image_flip or steve_hand_image == hand_stone_image_flip or steve_hand_image == hand_iron_image_flip or steve_hand_image == hand_dia_image_flip:
-	steve_hand.left = 606
-	steve_hand.top = 375
-
-if steve_hand_image == hand_wood_image_45_flip or steve_hand_image == hand_stone_image_45_flip or steve_hand_image == hand_iron_image_45_flip or steve_hand_image == hand_dia_image_45_flip:
-	steve_hand.left = 568
-	steve_hand.top = 318
-
-if steve_hand_image == hand_wood_image_90_flip or steve_hand_image == hand_stone_image_90_flip or steve_hand_image == hand_iron_image_90_flip or steve_hand_image == hand_dia_image_90_flip:
-	steve_hand.left = 595
-	steve_hand.top = 338
-
-if steve_hand_image == hand_wood_image_135_flip or steve_hand_image == hand_stone_image_135_flip or steve_hand_image == hand_iron_image_135_flip or steve_hand_image == hand_dia_image_135_flip:
-	steve_hand.left = 594
-	steve_hand.top = 348
+#0도 594, 378
+#45도: -26 -60
+#90도: +0 -40
+# 135도: +0 -30
+#flip:
+#0도: +12: 606, 378
+#45도: -38 -60
+#90도: + 0 -40
+#135도: +0 -30
 
 while True:
 
@@ -121,7 +114,192 @@ while True:
 		if event.type == MOUSEBUTTONDOWN:
 			for i in block_list:
 				if i.check_mouse():
-					i.hide = True
+					if steve_hand_image == hand_wood_image:
+						steve_hand_image = hand_wood_image_45
+						steve_hand.left -= 26
+						steve_hand.top -=60
+						screen.blit(steve_hand_image, steve_hand)
+						pygame.display.update()
+						pygame.time.wait(1000)
+						steve_hand_image = hand_wood_image_90
+						steve_hand.left += 26
+						steve_hand.top += 20
+						screen.blit(steve_hand_image, steve_hand)
+						pygame.display.update()
+						pygame.time.wait(1000)
+						steve_hand_image = hand_wood_image_135
+						steve_hand.top += 10
+						screen.blit(steve_hand_image, steve_hand)
+						pygame.display.update()
+						pygame.time.wait(1000)
+						steve_hand_image = hand_wood_image
+						steve_hand.top += 30
+						i.hide = True
+						event = None
+					elif steve_hand_image == hand_stone_image:
+						steve_hand_image = hand_stone_image_45
+						steve_hand.left -= 26
+						steve_hand.top -=60
+						screen.blit(steve_hand_image, steve_hand)
+						pygame.display.update()
+						pygame.time.wait(1000)
+						steve_hand_image = hand_stone_image_90
+						steve_hand.left += 26
+						steve_hand.top += 20
+						screen.blit(steve_hand_image, steve_hand)
+						pygame.display.update()
+						pygame.time.wait(1000)
+						steve_hand_image = hand_stone_image_135
+						steve_hand.top += 10
+						screen.blit(steve_hand_image, steve_hand)
+						pygame.display.update()
+						pygame.time.wait(1000)
+						steve_hand_image = hand_stone_image
+						steve_hand.top += 30
+						i.hide = True
+						event = None
+					elif steve_hand_image == hand_iron_image:
+						steve_hand_image = hand_iron_image_45
+						steve_hand.left -= 26
+						steve_hand.top -=60
+						screen.blit(steve_hand_image, steve_hand)
+						pygame.display.update()
+						pygame.time.wait(1000)
+						steve_hand_image = hand_iron_image_90
+						steve_hand.left += 26
+						steve_hand.top += 20
+						screen.blit(steve_hand_image, steve_hand)
+						pygame.display.update()
+						pygame.time.wait(1000)
+						steve_hand_image = hand_iron_image_135
+						steve_hand.top += 10
+						screen.blit(steve_hand_image, steve_hand)
+						pygame.display.update()
+						pygame.time.wait(1000)
+						steve_hand_image = hand_iron_image
+						steve_hand.top += 30
+						i.hide = True
+						event = None
+					elif steve_hand_image == hand_dia_image:
+						steve_hand_image = hand_dia_image_45
+						steve_hand.left -= 26
+						steve_hand.top -=60
+						screen.blit(steve_hand_image, steve_hand)
+						pygame.display.update()
+						pygame.time.wait(1000)
+						steve_hand_image = hand_dia_image_90
+						steve_hand.left += 26
+						steve_hand.top += 20
+						screen.blit(steve_hand_image, steve_hand)
+						pygame.display.update()
+						pygame.time.wait(1000)
+						steve_hand_image = hand_dia_image_135
+						steve_hand.top += 10
+						screen.blit(steve_hand_image, steve_hand)
+						pygame.display.update()
+						pygame.time.wait(1000)
+						steve_hand_image = hand_dia_image
+						steve_hand.top += 30
+						i.hide = True
+						event = None
+					if steve_hand_image == hand_wood_image_flip:
+						steve_hand_image = hand_wood_image_45_flip
+						steve_hand.left += 6
+						steve_hand.top -=60
+						screen.blit(steve_hand_image, steve_hand)
+						pygame.display.update()
+						pygame.time.wait(1000)
+						steve_hand_image = hand_wood_image_90_flip
+						steve_hand.left -= 6
+						steve_hand.top += 20
+						screen.blit(steve_hand_image, steve_hand)
+						pygame.display.update()
+						pygame.time.wait(1000)
+						steve_hand_image = hand_wood_image_135_flip
+						steve_hand.left -= 21
+						steve_hand.top += 10
+						screen.blit(steve_hand_image, steve_hand)
+						pygame.display.update()
+						pygame.time.wait(1000)
+						steve_hand_image = hand_wood_image_flip
+						steve_hand.top += 30
+						steve_hand.left += 21
+						i.hide = True
+						event = None
+					elif steve_hand_image == hand_stone_image_flip:
+						steve_hand_image = hand_stone_image_45_flip
+						steve_hand.left +=6
+						steve_hand.top -=60
+						screen.blit(steve_hand_image, steve_hand)
+						pygame.display.update()
+						pygame.time.wait(1000)
+						steve_hand_image = hand_stone_image_90_flip
+						steve_hand.left -= 6
+						steve_hand.top += 20
+						screen.blit(steve_hand_image, steve_hand)
+						pygame.display.update()
+						pygame.time.wait(1000)
+						steve_hand_image = hand_stone_image_135_flip
+						steve_hand.left -= 21
+						steve_hand.top += 10
+						screen.blit(steve_hand_image, steve_hand)
+						pygame.display.update()
+						pygame.time.wait(1000)
+						steve_hand_image = hand_stone_image_flip
+						steve_hand.left += 21
+						steve_hand.top += 30
+						i.hide = True
+						event = None
+					elif steve_hand_image == hand_iron_image_flip:
+						steve_hand_image = hand_iron_image_45_flip
+						steve_hand.left += 6
+						steve_hand.top -=60
+						screen.blit(steve_hand_image, steve_hand)
+						pygame.display.update()
+						pygame.time.wait(1000)
+						steve_hand_image = hand_iron_image_90_flip
+						steve_hand.left -= 6
+						steve_hand.top += 20
+						screen.blit(steve_hand_image, steve_hand)
+						pygame.display.update()
+						pygame.time.wait(1000)
+						steve_hand_image = hand_iron_image_135_flip
+						steve_hand.left -= 21
+						steve_hand.top += 10
+						screen.blit(steve_hand_image, steve_hand)
+						pygame.display.update()
+						pygame.time.wait(1000)
+						steve_hand_image = hand_iron_image_flip
+						steve_hand.left += 21
+						steve_hand.top += 30
+						i.hide = True
+						event = None
+					elif steve_hand_image == hand_dia_image_flip:
+						steve_hand_image = hand_dia_image_45_flip
+						steve_hand.left += 6
+						steve_hand.top -=60
+						screen.blit(steve_hand_image, steve_hand)
+						pygame.display.update()
+						pygame.time.wait(1000)
+						steve_hand_image = hand_dia_image_90_flip
+						steve_hand.left -= 6
+						steve_hand.top += 20
+						screen.blit(steve_hand_image, steve_hand)
+						pygame.display.update()
+						pygame.time.wait(1000)
+						steve_hand_image = hand_dia_image_135_flip
+						steve_hand.top += 10
+						steve_hand.left -= 21
+						screen.blit(steve_hand_image, steve_hand)
+						pygame.display.update()
+						pygame.time.wait(1000)
+						steve_hand_image = hand_dia_image_flip
+						steve_hand.top += 30
+						steve_hand.left += 21
+						i.hide = True
+						event = None
+					else:
+						break
 
 	if keyInput[K_a] and steve.left >= 0:
 		steve.centerx -= 5
