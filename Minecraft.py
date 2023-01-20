@@ -24,24 +24,24 @@ eme_num_x = list()
 eme_num_y = list()
 tnt_num_x = list()
 tnt_num_y = list()
+list_49 = list()
+list_24 = list()
+list_40 = list()
+list_30 = list()
+list_20 = list()
+list_11 = list()
 
 for i in range(49):
-	list_49 = list()
 	list_49.append(i)
 for i in range(24):
-	list_24 = list()
 	list_24.append(i)
 for i in range(40):
-	list_40 = list()
 	list_40.append(i)
 for i in range(30):
-	list_30 = list()
 	list_30.append(i)
 for i in range(20):
-	list_20 = list()
 	list_20.append(i)
 for i in range(11):
-	list_11 = list()
 	list_11.append(i)
 for i in range(20):
 	dia_num_x.append(choice(list_24))
@@ -49,6 +49,7 @@ for i in range(20):
 for i in range(140):
 	coal_num_x.append(choice(list_24))
 	coal_num_y.append(choice(list_49))
+	print(coal_num_x)
 for i in range(150):
 	iron_num_x.append(choice(list_24))
 	iron_num_y.append(choice(list_40))
@@ -61,6 +62,7 @@ for i in range(30):
 for i in range(40):
 	tnt_num_x.append(choice(list_24))
 	tnt_num_y.append(choice(list_40))
+
 
 class Block:
 	def __init__(self, block_name, number):
@@ -204,7 +206,6 @@ Open_store = False
 #45도: -38 -60
 #90도: + 0 -40
 #135도: +0 -30
-
 while True:
 
 	keyInput = pygame.key.get_pressed()
