@@ -2,6 +2,7 @@ import sys
 from pygame.locals import *
 from hand import *
 import math
+from random import *
 
 width = 1200
 height = 900
@@ -11,7 +12,55 @@ pygame.init()
 # wood: 3s stone:2s iron:1s diamond:0.5s
 screen = pygame.display.set_mode((width, height))
 clock = pygame.time.Clock()
+dia_num_x = list()
+dia_num_y = list()
+iron_num_x = list()
+iron_num_y = list()
+coal_num_x = list()
+coal_num_y = list()
+ice_num_x = list()
+ice_num_y = list()
+eme_num_x = list()
+eme_num_y = list()
+tnt_num_x = list()
+tnt_num_y = list()
 
+for i in range(49):
+	list_49 = list()
+	list_49.append(i)
+for i in range(24):
+	list_24 = list()
+	list_24.append(i)
+for i in range(40):
+	list_40 = list()
+	list_40.append(i)
+for i in range(30):
+	list_30 = list()
+	list_30.append(i)
+for i in range(20):
+	list_20 = list()
+	list_20.append(i)
+for i in range(11):
+	list_11 = list()
+	list_11.append(i)
+for i in range(20):
+	dia_num_x.append(choice(list_24))
+	dia_num_y.append(choice(list_11))
+for i in range(140):
+	coal_num_x.append(choice(list_24))
+	coal_num_y.append(choice(list_49))
+for i in range(150):
+	iron_num_x.append(choice(list_24))
+	iron_num_y.append(choice(list_40))
+for i in range(130):
+	ice_num_x.append(choice(list_24))
+	ice_num_y.append(choice(list_40))
+for i in range(30):
+	eme_num_x.append(choice(list_24))
+	eme_num_y.append(choice(list_20))
+for i in range(40):
+	tnt_num_x.append(choice(list_24))
+	tnt_num_y.append(choice(list_40))
 
 class Block:
 	def __init__(self, block_name, number):
@@ -60,21 +109,41 @@ class Block:
 		if self.block_name == 'grass':
 			self.y = 50
 			self.x = self.number
-		# elif self.block_name == '':
-
+		elif self.block_name == 'tnt':
+			self.y = tnt_num_y[self.number]
+			self.x = tnt_num_x[self.number]
+		elif self.block_name == 'diamond':
+			self.y = dia_num_y[self.number]
+			self.x = dia_num_x[self.number]
+		elif self.block_name == 'emerald':
+			self.y = eme_num_y[self.number]
+			self.x = eme_num_x[self.number]
+		elif self.block_name == 'iron':
+			self.y = iron_num_y[self.number]
+			self.x = iron_num_x[self.number]
+		elif self.block_name == 'coal':
+			self.y = coal_num_y[self.number]
+			self.x = coal_num_x[self.number]
+		elif self.block_name == 'ice':
+			self.y = ice_num_y[self.number]
+			self.x = ice_num_x[self.number]
+		elif self.block_name == 'stone':
+			print("later")
 		else:
-			self.y = 0
+			print("Error!%n")
+			print("Please remove this program%n")
+			print("and download Program again.")
+			sys.exit()
 
 	def set_x(self):
 		self.rect.x = self.x * 50
 
 	def set_y(self):
-		self.rect.y = 900 - (9 * self.y)
+		self.rect.y = 2950 - (50 * self.y)
 
 
 coal_list = list()
 iron_list = list()
-gold_list = list()
 grass_list = list()
 ice_list = list()
 stone_list = list()
