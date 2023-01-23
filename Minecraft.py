@@ -7,6 +7,7 @@ from random import *
 width = 1200
 height = 900
 jumping = False
+colliding = False
 
 pygame.init()
 # x:1은 x24로 정하기 y:1은 y 18
@@ -62,9 +63,18 @@ for i in range(20):
 		if spawn_ore_data[j] == 'stone':
 			spawn_ore_data[j] = 'diamond'
 
+steve = pygame.Rect(600, 450, 24, 100)
+steve_image = pygame.image.load("image/steve.png")
+steve_image = pygame.transform.scale(steve_image, (steve.w, steve.h))
+steve_image_flip = pygame.transform.flip(steve_image, True, False)
+steve.centerx = 600
+steve.bottom = 450
+steve_image_now = steve_image
+
 
 class Block:
 	def __init__(self, block_name, number):
+		self.steve_on_me = False
 		self.isjump = 0
 		self.number = number
 		self.distance = 0
@@ -83,7 +93,7 @@ class Block:
 			screen.blit(self.image, self.rect)
 
 	def check_mouse(self):
-		if not self.hide and self.border:
+		if not self.hide and self.border and not self.block_name == 'bedrock':
 			if steve_image_now == steve_image:
 				if self.rect.left >= steve.right:
 					self.distance = round(math.sqrt(((steve.centerx -self.rect.centerx) ** 2) + ((steve.top -self.rect.centery) ** 2)))
@@ -111,7 +121,9 @@ class Block:
 		if self.block_name == 'grass':
 			self.y = 50
 			self.x = self.number
-
+		if self.block_name == 'bedrock':
+			self.y = 1
+			self.x = self.number
 		for n in range(1150):
 			if spawn_ore_data[n] == self.block_name:
 				n_x = n % 24
@@ -120,7 +132,7 @@ class Block:
 				self.y = 49 - n_y
 				spawn_ore_data[n] = 'Done'
 				break
-		if self.x == 0 and self.y == -2:
+		if self.x == 0 and self.y == 0:
 			self.x = 100
 			self.y = 100
 
@@ -141,6 +153,23 @@ class Block:
 			self.y += 1
 			self.isjump = 0
 
+	def check_steve(self):
+		global colliding
+		if steve_image_now == steve_image:
+			if self.rect.collidepoint((steve.right, steve.top - 10)):
+				colliding = True
+			elif self.rect.collidepoint((steve.right, steve.bottom + 10)):
+				colliding = True
+			else:
+				colliding = False
+		elif steve_image_now == steve_image_flip:
+			if self.rect.collidepoint((steve.left, steve.top - 10)):
+				colliding = True
+			elif self.rect.collidepoint((steve.left, steve.bottom + 10)):
+				colliding = True
+			else:
+				colliding = False
+
 
 coal_list = list()
 iron_list = list()
@@ -150,6 +179,7 @@ stone_list = list()
 tnt_list = list()
 emerald_list = list()
 diamond_list = list()
+bedrock_list = list()
 
 for i in range(150):
 	iron = Block('iron', i)
@@ -175,9 +205,11 @@ for i in range(24):
 for i in range(690):
 	stone = Block('stone', i)
 	stone_list.append(stone)
+for i in range(24):
+	bedrock = Block('bedrock', i)
+	bedrock_list.append(bedrock)
 
-
-block_list = [coal_list, iron_list, emerald_list, diamond_list, ice_list, tnt_list, stone_list, grass_list]
+block_list = [coal_list, iron_list, emerald_list, diamond_list, ice_list, tnt_list, stone_list, grass_list, bedrock_list]
 #coal iron eme dia ice tnt stone
 for i in block_list:
 	for j in i:
@@ -186,14 +218,6 @@ for i in block_list:
 
 # 리스트에 넣어서 for i in range를 이용하여 인덱싱으로 맞춘다.
 steve_hand_image = hand_wood_image
-
-steve = pygame.Rect(600, 450, 24, 100)
-steve_image = pygame.image.load("image/steve.png")
-steve_image = pygame.transform.scale(steve_image, (steve.w, steve.h))
-steve_image_flip = pygame.transform.flip(steve_image, True, False)
-steve.centerx = 600
-steve.bottom = 450
-steve_image_now = steve_image
 
 Open_store = False
 
@@ -207,7 +231,6 @@ Open_store = False
 #90도: + 0 -40
 #135도: +0 -30
 while True:
-
 	keyInput = pygame.key.get_pressed()
 	mouseInput = pygame.mouse.get_pressed()
 	for event in pygame.event.get():
@@ -220,6 +243,8 @@ while True:
 					for i in j:
 						if i.isjump == 0:
 							i.jump(1)
+						if i.isjump == 1:
+							i.jump(2)
 		if event.type == KEYUP:
 			if event.key == K_SPACE:
 				for j in block_list:
@@ -417,7 +442,7 @@ while True:
 						else:
 							break
 
-	if keyInput[K_a] and steve.left >= 0:
+	if keyInput[K_a] and steve.left >= 0 and not colliding:
 		steve.centerx -= 5
 		steve_hand.left -= 5
 		steve_image_now = steve_image_flip
@@ -426,7 +451,7 @@ while True:
 				steve_hand_image = hand_image_list_flip[hand_image_list.index(i)]
 				steve_hand.right = steve_hand.left + 12
 
-	if keyInput[K_d] and steve.right <= 1200:
+	if keyInput[K_d] and steve.right <= 1200 and not colliding:
 		steve.centerx += 5
 		steve_hand.right += 5
 		steve_image_now = steve_image
@@ -434,17 +459,13 @@ while True:
 			if steve_hand_image == hand_image_list_flip[hand_image_list_flip.index(i)]:
 				steve_hand_image = hand_image_list[hand_image_list_flip.index(i)]
 				steve_hand.left = steve_hand.right -12
-	if keyInput[K_SPACE]:
-		for j in block_list:
-			for i in j:
-				if i.isjump == 0:
-					i.jump(-1)
 
 	screen.fill((255, 255, 255))
 	clock.tick(60)
 	if not Open_store:
 		for j in block_list:
 			for i in j:
+				i.check_steve()
 				i.check_jump()
 				i.set_x()
 				i.set_y()
