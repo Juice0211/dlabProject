@@ -24,15 +24,17 @@ eme_num_x = list()
 eme_num_y = list()
 tnt_num_x = list()
 tnt_num_y = list()
-list_49 = list()
+list_50 = list()
 list_24 = list()
 list_40 = list()
 list_30 = list()
 list_20 = list()
 list_11 = list()
+stone_num_x = list()
+stone_num_y = list()
 
-for i in range(49):
-	list_49.append(i)
+for i in range(50):
+	list_50.append(i)
 for i in range(24):
 	list_24.append(i)
 for i in range(40):
@@ -48,8 +50,7 @@ for i in range(20):
 	dia_num_y.append(choice(list_11))
 for i in range(140):
 	coal_num_x.append(choice(list_24))
-	coal_num_y.append(choice(list_49))
-	print(coal_num_x)
+	coal_num_y.append(choice(list_50))
 for i in range(150):
 	iron_num_x.append(choice(list_24))
 	iron_num_y.append(choice(list_40))
@@ -62,6 +63,21 @@ for i in range(30):
 for i in range(40):
 	tnt_num_x.append(choice(list_24))
 	tnt_num_y.append(choice(list_40))
+for i in range(50):
+	for j in range(24):
+		stone_num_x.append(list_24[j])
+for i in range(24):
+	for j in range(50):
+		stone_num_y.append(list_50[j])
+
+stone_num_x_dummy = dia_num_x + coal_num_x + iron_num_x + ice_num_x + eme_num_x + tnt_num_x
+stone_num_y_dummy = dia_num_y + coal_num_y + iron_num_y + ice_num_y + eme_num_y + tnt_num_y
+print(stone_num_x_dummy)
+print(stone_num_x)
+print(len(stone_num_x_dummy))
+for i in range(510):
+	stone_num_x.remove(stone_num_x_dummy[i])
+	stone_num_y.remove(stone_num_y_dummy[i])
 
 
 class Block:
@@ -130,7 +146,8 @@ class Block:
 			self.y = ice_num_y[self.number]
 			self.x = ice_num_x[self.number]
 		elif self.block_name == 'stone':
-			print("later")
+			self.y = stone_num_y[self.number]
+			self.x = stone_num_x[self.number]
 		else:
 			print("Error!%n")
 			print("Please remove this program%n")
@@ -177,8 +194,10 @@ for i in range(24):
 for i in range(666):
 	stone = Block('stone', i)
 	stone_list.append(stone)
-block_list = [coal_list, iron_list, stone_list, tnt_list, emerald_list, grass_list, diamond_list, ice_list]
 
+
+block_list = [coal_list, iron_list, emerald_list, diamond_list, ice_list, tnt_list, stone_list, grass_list]
+#coal iron eme dia ice tnt stone
 for i in block_list:
 	for j in i:
 		j.set_block_xy()
