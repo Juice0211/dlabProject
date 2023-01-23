@@ -6,82 +6,66 @@ from random import *
 
 width = 1200
 height = 900
+jumping = False
 
 pygame.init()
 # x:1은 x24로 정하기 y:1은 y 18
 # wood: 3s stone:2s iron:1s diamond:0.5s
 screen = pygame.display.set_mode((width, height))
+pygame.display.set_caption("2D Minecraft")
 clock = pygame.time.Clock()
-dia_num_x = list()
-dia_num_y = list()
-iron_num_x = list()
-iron_num_y = list()
-coal_num_x = list()
-coal_num_y = list()
-ice_num_x = list()
-ice_num_y = list()
-eme_num_x = list()
-eme_num_y = list()
-tnt_num_x = list()
-tnt_num_y = list()
-list_50 = list()
-list_24 = list()
-list_40 = list()
-list_30 = list()
-list_20 = list()
-list_11 = list()
-stone_num_x = list()
-stone_num_y = list()
 
-for i in range(50):
-	list_50.append(i)
-for i in range(24):
-	list_24.append(i)
-for i in range(40):
-	list_40.append(i)
-for i in range(30):
-	list_30.append(i)
-for i in range(20):
-	list_20.append(i)
-for i in range(11):
-	list_11.append(i)
-for i in range(20):
-	dia_num_x.append(choice(list_24))
-	dia_num_y.append(choice(list_11))
+spawn_ore_data = list()
+
+for i in range(1150):
+	spawn_ore_data.append('stone')
 for i in range(140):
-	coal_num_x.append(choice(list_24))
-	coal_num_y.append(choice(list_50))
+	spawn_ore_data[randint(0, 1149)] = 'coal'
 for i in range(150):
-	iron_num_x.append(choice(list_24))
-	iron_num_y.append(choice(list_40))
+	j = randint(216, 1149)
+	if spawn_ore_data[j] == 'stone':
+		spawn_ore_data[j] = 'iron'
+	else:
+		j = randint(216, 1149)
+		if spawn_ore_data[j] == 'stone':
+			spawn_ore_data[j] = 'iron'
 for i in range(130):
-	ice_num_x.append(choice(list_24))
-	ice_num_y.append(choice(list_40))
+	j = randint(216, 1149)
+	if spawn_ore_data[j] == 'stone':
+		spawn_ore_data[j] = 'ice'
+	else:
+		j = randint(216, 1149)
+		if spawn_ore_data[j] == 'stone':
+			spawn_ore_data[j] = 'ice'
 for i in range(30):
-	eme_num_x.append(choice(list_24))
-	eme_num_y.append(choice(list_20))
+	j = randint(696, 1149)
+	if spawn_ore_data[j] == 'stone':
+		spawn_ore_data[j] = 'emerald'
+	else:
+		j = randint(696, 1149)
+		if spawn_ore_data[j] == 'stone':
+			spawn_ore_data[j] = 'emerald'
 for i in range(40):
-	tnt_num_x.append(choice(list_24))
-	tnt_num_y.append(choice(list_40))
-for i in range(50):
-	for j in range(24):
-		stone_num_x.append(list_24[j])
-for i in range(24):
-	for j in range(50):
-		stone_num_y.append(list_50[j])
-
-stone_num_x_dummy = dia_num_x + coal_num_x + iron_num_x + ice_num_x + eme_num_x + tnt_num_x
-stone_num_y_dummy = dia_num_y + coal_num_y + iron_num_y + ice_num_y + eme_num_y + tnt_num_y
-print(stone_num_x_dummy)
-print(stone_num_x)
-print(len(stone_num_x_dummy))
-for i in range(510):
-	stone_num_x.remove(stone_num_x_dummy[i])
-	stone_num_y.remove(stone_num_y_dummy[i])
+	j = randint(216, 1149)
+	if spawn_ore_data[j] == 'stone':
+		spawn_ore_data[j] = 'tnt'
+	else:
+		j = randint(216, 1149)
+		if spawn_ore_data[j] == 'stone':
+			spawn_ore_data[j] = 'tnt'
+for i in range(20):
+	j = randint(912, 1149)
+	if spawn_ore_data[j] == 'stone':
+		spawn_ore_data[j] = 'diamond'
+	else:
+		j = randint(912, 1149)
+		if spawn_ore_data[j] == 'stone':
+			spawn_ore_data[j] = 'diamond'
 
 
 class Block:
 	def __init__(self, block_name, number):
+		self.isjump = 0
 		self.number = number
 		self.distance = 0
 		self.x = 0
@@ -127,38 +111,35 @@ class Block:
 		if self.block_name == 'grass':
 			self.y = 50
 			self.x = self.number
-		elif self.block_name == 'tnt':
-			self.y = tnt_num_y[self.number]
-			self.x = tnt_num_x[self.number]
-		elif self.block_name == 'diamond':
-			self.y = dia_num_y[self.number]
-			self.x = dia_num_x[self.number]
-		elif self.block_name == 'emerald':
-			self.y = eme_num_y[self.number]
-			self.x = eme_num_x[self.number]
-		elif self.block_name == 'iron':
-			self.y = iron_num_y[self.number]
-			self.x = iron_num_x[self.number]
-		elif self.block_name == 'coal':
-			self.y = coal_num_y[self.number]
-			self.x = coal_num_x[self.number]
-		elif self.block_name == 'ice':
-			self.y = ice_num_y[self.number]
-			self.x = ice_num_x[self.number]
-		elif self.block_name == 'stone':
-			self.y = stone_num_y[self.number]
-			self.x = stone_num_x[self.number]
-		else:
-			print("Error!%n")
-			print("Please remove this program%n")
-			print("and download Program again.")
-			sys.exit()
+
+		for n in range(1150):
+			if spawn_ore_data[n] == self.block_name:
+				n_x = n % 24
+				self.x = 23 - n_x
+				n_y = math.trunc(n / 24)
+				self.y = 49 - n_y
+				spawn_ore_data[n] = 'Done'
+				break
+		if self.x == 0 and self.y == -2:
+			self.x = 100
+			self.y = 100
 
 	def set_x(self):
 		self.rect.x = self.x * 50
 
 	def set_y(self):
 		self.rect.y = 2950 - (50 * self.y)
+
+	def jump(self, jump):
+		self.isjump = jump
+
+	def check_jump(self):
+		if self.isjump > 0:
+			self.y -= 1
+			self.isjump = 0
+		if self.isjump == -1:
+			self.y += 1
+			self.isjump = 0
 
 
 coal_list = list()
@@ -191,7 +172,7 @@ for i in range(40):
 for i in range(24):
 	grass = Block('grass', i)
 	grass_list.append(grass)
-for i in range(666):
+for i in range(690):
 	stone = Block('stone', i)
 	stone_list.append(stone)
 
@@ -233,6 +214,18 @@ while True:
 		if event.type == QUIT:
 			pygame.quit()
 			sys.exit()
+		if event.type == KEYDOWN:
+			if event.key == K_SPACE:
+				for j in block_list:
+					for i in j:
+						if i.isjump == 0:
+							i.jump(1)
+		if event.type == KEYUP:
+			if event.key == K_SPACE:
+				for j in block_list:
+					for i in j:
+						if i.isjump == 0:
+							i.jump(-1)
 		if event.type == MOUSEBUTTONDOWN:
 			for j in block_list:
 				for i in j:
@@ -265,18 +258,18 @@ while True:
 							steve_hand.top -=60
 							screen.blit(steve_hand_image, steve_hand)
 							pygame.display.update()
-							pygame.time.wait(1000)
+							pygame.time.wait(666)
 							steve_hand_image = hand_stone_image_90
 							steve_hand.left += 26
 							steve_hand.top += 20
 							screen.blit(steve_hand_image, steve_hand)
 							pygame.display.update()
-							pygame.time.wait(1000)
+							pygame.time.wait(666)
 							steve_hand_image = hand_stone_image_135
 							steve_hand.top += 10
 							screen.blit(steve_hand_image, steve_hand)
 							pygame.display.update()
-							pygame.time.wait(1000)
+							pygame.time.wait(668)
 							steve_hand_image = hand_stone_image
 							steve_hand.top += 30
 							i.hide = True
@@ -287,18 +280,18 @@ while True:
 							steve_hand.top -=60
 							screen.blit(steve_hand_image, steve_hand)
 							pygame.display.update()
-							pygame.time.wait(1000)
+							pygame.time.wait(333)
 							steve_hand_image = hand_iron_image_90
 							steve_hand.left += 26
 							steve_hand.top += 20
 							screen.blit(steve_hand_image, steve_hand)
 							pygame.display.update()
-							pygame.time.wait(1000)
+							pygame.time.wait(333)
 							steve_hand_image = hand_iron_image_135
 							steve_hand.top += 10
 							screen.blit(steve_hand_image, steve_hand)
 							pygame.display.update()
-							pygame.time.wait(1000)
+							pygame.time.wait(334)
 							steve_hand_image = hand_iron_image
 							steve_hand.top += 30
 							i.hide = True
@@ -309,18 +302,18 @@ while True:
 							steve_hand.top -=60
 							screen.blit(steve_hand_image, steve_hand)
 							pygame.display.update()
-							pygame.time.wait(1000)
+							pygame.time.wait(166)
 							steve_hand_image = hand_dia_image_90
 							steve_hand.left += 26
 							steve_hand.top += 20
 							screen.blit(steve_hand_image, steve_hand)
 							pygame.display.update()
-							pygame.time.wait(1000)
+							pygame.time.wait(166)
 							steve_hand_image = hand_dia_image_135
 							steve_hand.top += 10
 							screen.blit(steve_hand_image, steve_hand)
 							pygame.display.update()
-							pygame.time.wait(1000)
+							pygame.time.wait(167)
 							steve_hand_image = hand_dia_image
 							steve_hand.top += 30
 							i.hide = True
@@ -355,19 +348,19 @@ while True:
 							steve_hand.top -=60
 							screen.blit(steve_hand_image, steve_hand)
 							pygame.display.update()
-							pygame.time.wait(1000)
+							pygame.time.wait(666)
 							steve_hand_image = hand_stone_image_90_flip
 							steve_hand.left -= 6
 							steve_hand.top += 20
 							screen.blit(steve_hand_image, steve_hand)
 							pygame.display.update()
-							pygame.time.wait(1000)
+							pygame.time.wait(666)
 							steve_hand_image = hand_stone_image_135_flip
 							steve_hand.left -= 21
 							steve_hand.top += 10
 							screen.blit(steve_hand_image, steve_hand)
 							pygame.display.update()
-							pygame.time.wait(1000)
+							pygame.time.wait(668)
 							steve_hand_image = hand_stone_image_flip
 							steve_hand.left += 21
 							steve_hand.top += 30
@@ -379,19 +372,19 @@ while True:
 							steve_hand.top -=60
 							screen.blit(steve_hand_image, steve_hand)
 							pygame.display.update()
-							pygame.time.wait(1000)
+							pygame.time.wait(333)
 							steve_hand_image = hand_iron_image_90_flip
 							steve_hand.left -= 6
 							steve_hand.top += 20
 							screen.blit(steve_hand_image, steve_hand)
 							pygame.display.update()
-							pygame.time.wait(1000)
+							pygame.time.wait(333)
 							steve_hand_image = hand_iron_image_135_flip
 							steve_hand.left -= 21
 							steve_hand.top += 10
 							screen.blit(steve_hand_image, steve_hand)
 							pygame.display.update()
-							pygame.time.wait(1000)
+							pygame.time.wait(334)
 							steve_hand_image = hand_iron_image_flip
 							steve_hand.left += 21
 							steve_hand.top += 30
@@ -403,19 +396,19 @@ while True:
 							steve_hand.top -=60
 							screen.blit(steve_hand_image, steve_hand)
 							pygame.display.update()
-							pygame.time.wait(1000)
+							pygame.time.wait(166)
 							steve_hand_image = hand_dia_image_90_flip
 							steve_hand.left -= 6
 							steve_hand.top += 20
 							screen.blit(steve_hand_image, steve_hand)
 							pygame.display.update()
-							pygame.time.wait(1000)
+							pygame.time.wait(166)
 							steve_hand_image = hand_dia_image_135_flip
 							steve_hand.top += 10
 							steve_hand.left -= 21
 							screen.blit(steve_hand_image, steve_hand)
 							pygame.display.update()
-							pygame.time.wait(1000)
+							pygame.time.wait(167)
 							steve_hand_image = hand_dia_image_flip
 							steve_hand.top += 30
 							steve_hand.left += 21
@@ -441,17 +434,22 @@ while True:
 			if steve_hand_image == hand_image_list_flip[hand_image_list_flip.index(i)]:
 				steve_hand_image = hand_image_list[hand_image_list_flip.index(i)]
 				steve_hand.left = steve_hand.right -12
+	if keyInput[K_SPACE]:
+		for j in block_list:
+			for i in j:
+				if i.isjump == 0:
+					i.jump(-1)
 
 	screen.fill((255, 255, 255))
 	clock.tick(60)
 	if not Open_store:
 		for j in block_list:
 			for i in j:
+				i.check_jump()
 				i.set_x()
 				i.set_y()
 				i.draw()
 				i.set_border()
 		screen.blit(steve_image_now, steve)
 		screen.blit(steve_hand_image, steve_hand)
-
 	pygame.display.update()
