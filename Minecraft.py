@@ -7,7 +7,9 @@ from random import *
 width = 1200
 height = 900
 jumping = False
-colliding = False
+colliding = list()
+colliding_bool = False
+colliding_check = 0
 
 pygame.init()
 # x:1은 x24로 정하기 y:1은 y 18
@@ -63,6 +65,9 @@ for i in range(20):
 		if spawn_ore_data[j] == 'stone':
 			spawn_ore_data[j] = 'diamond'
 
+for i in range(1274):
+	colliding.append('False')
+
 steve = pygame.Rect(600, 450, 24, 100)
 steve_image = pygame.image.load("image/steve.png")
 steve_image = pygame.transform.scale(steve_image, (steve.w, steve.h))
@@ -76,7 +81,7 @@ class Block:
 	def __init__(self, block_name, number):
 		self.steve_on_me = False
 		self.isjump = 0
-		self.number = number
+		self.number = int(number)
 		self.distance = 0
 		self.x = 0
 		self.y = 0
@@ -120,10 +125,10 @@ class Block:
 	def set_block_xy(self):
 		if self.block_name == 'grass':
 			self.y = 50
-			self.x = self.number
+			self.x = self.number - 1200
 		if self.block_name == 'bedrock':
 			self.y = 1
-			self.x = self.number
+			self.x = self.number - 1250
 		for n in range(1150):
 			if spawn_ore_data[n] == self.block_name:
 				n_x = n % 24
@@ -156,19 +161,19 @@ class Block:
 	def check_steve(self):
 		global colliding
 		if steve_image_now == steve_image:
-			if self.rect.collidepoint((steve.right, steve.top - 10)):
-				colliding = True
-			elif self.rect.collidepoint((steve.right, steve.bottom + 10)):
-				colliding = True
+			if self.rect.collidepoint((steve.right, steve.top + 10)) and not self.hide:
+				colliding[self.number] = 'True'
+			elif self.rect.collidepoint((steve.right, steve.bottom - 10)) and not self.hide:
+				colliding[self.number] = 'True'
 			else:
-				colliding = False
+				colliding[self.number] = 'False'
 		elif steve_image_now == steve_image_flip:
-			if self.rect.collidepoint((steve.left, steve.top - 10)):
-				colliding = True
-			elif self.rect.collidepoint((steve.left, steve.bottom + 10)):
-				colliding = True
+			if self.rect.collidepoint((steve.left, steve.top + 10)) and not self.hide:
+				colliding[self.number] = 'True'
+			elif self.rect.collidepoint((steve.left, steve.bottom - 10)) and not self.hide:
+				colliding[self.number] = 'True'
 			else:
-				colliding = False
+				colliding[self.number] = 'False'
 
 
 coal_list = list()
@@ -180,33 +185,33 @@ tnt_list = list()
 emerald_list = list()
 diamond_list = list()
 bedrock_list = list()
-
-for i in range(150):
-	iron = Block('iron', i)
-	iron_list.append(iron)
-for i in range(130):
-	ice = Block('ice', i)
-	ice_list.append(ice)
-for i in range(140):
-	coal = Block('coal', i)
-	coal_list.append(coal)
-for i in range(30):
-	emerald = Block('emerald', i)
-	emerald_list.append(emerald)
-for i in range(20):
-	diamond = Block('diamond', i)
-	diamond_list.append(diamond)
-for i in range(40):
-	tnt = Block('tnt', i)
-	tnt_list.append(tnt)
+for i in range(1, 1201):
+	if 1 <= i <= 150:
+		iron = Block('iron', i)
+		iron_list.append(iron)
+	elif 151 <= i <= 280:
+		ice = Block('ice', i)
+		ice_list.append(ice)
+	elif 281 <= i <= 420:
+		coal = Block('coal', i)
+		coal_list.append(coal)
+	elif 421 <= i <= 450:
+		emerald = Block('emerald', i)
+		emerald_list.append(emerald)
+	elif 451 <= i <= 470:
+		diamond = Block('diamond', i)
+		diamond_list.append(diamond)
+	elif 471 <= i <= 510:
+		tnt = Block('tnt', i)
+		tnt_list.append(tnt)
+	elif 511 <= i:
+		stone = Block('stone', i)
+		stone_list.append(stone)
 for i in range(24):
-	grass = Block('grass', i)
+	grass = Block('grass', i+1200)
 	grass_list.append(grass)
-for i in range(690):
-	stone = Block('stone', i)
-	stone_list.append(stone)
 for i in range(24):
-	bedrock = Block('bedrock', i)
+	bedrock = Block('bedrock', i+1250)
 	bedrock_list.append(bedrock)
 
 block_list = [coal_list, iron_list, emerald_list, diamond_list, ice_list, tnt_list, stone_list, grass_list, bedrock_list]
@@ -441,8 +446,15 @@ while True:
 							event = None
 						else:
 							break
-
-	if keyInput[K_a] and steve.left >= 0 and not colliding:
+	colliding_check = 0
+	for i in range(1274):
+		if colliding[i] == 'True':
+			colliding_bool = True
+		if colliding[i] == 'False':
+			colliding_check += 1
+		if colliding_check == 1274:
+			colliding_bool = False
+	if keyInput[K_a] and steve.left >= 0 and not colliding_bool:
 		steve.centerx -= 5
 		steve_hand.left -= 5
 		steve_image_now = steve_image_flip
@@ -451,7 +463,7 @@ while True:
 				steve_hand_image = hand_image_list_flip[hand_image_list.index(i)]
 				steve_hand.right = steve_hand.left + 12
 
-	if keyInput[K_d] and steve.right <= 1200 and not colliding:
+	if keyInput[K_d] and steve.right <= 1200 and not colliding_bool:
 		steve.centerx += 5
 		steve_hand.right += 5
 		steve_image_now = steve_image
@@ -459,6 +471,15 @@ while True:
 			if steve_hand_image == hand_image_list_flip[hand_image_list_flip.index(i)]:
 				steve_hand_image = hand_image_list[hand_image_list_flip.index(i)]
 				steve_hand.left = steve_hand.right -12
+
+	if keyInput[K_h]:
+		for j in block_list:
+			for i in j:
+				i.y += 1
+	if keyInput[K_j]:
+		for j in block_list:
+			for i in j:
+				i.y -= 1
 
 	screen.fill((255, 255, 255))
 	clock.tick(60)
