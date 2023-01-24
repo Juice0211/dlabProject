@@ -14,6 +14,15 @@ colliding_check = 0
 pygame.init()
 # x:1은 x24로 정하기 y:1은 y 18
 # wood: 3s stone:2s iron:1s diamond:0.5s
+'''
+해야할 것:
+밑에 블럭이 없으면 내려가는거
+상점 ... 그냥 돌 몇개 쌓이면 자동으로 바뀌는것도 나쁘지 않을지도(이미지 또 넣기 싫은데)
+점프 -> 위로 올라가짐
+점프 시스템 개편 -> 2중 점프 가능
+조금이라도 닿을시 아예 못움직이는 현상 개편
+블럭 뒤도 캐지는거 개편?
+'''
 screen = pygame.display.set_mode((width, height))
 pygame.display.set_caption("2D Minecraft")
 clock = pygame.time.Clock()
