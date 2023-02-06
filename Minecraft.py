@@ -7,9 +7,13 @@ from random import *
 width = 1200
 height = 900
 jumping = False
-colliding = list()
-colliding_bool = False
-colliding_check = 0
+colliding_left = list()
+colliding_right = list()
+colliding_bool_left = False
+colliding_bool_right = False
+colliding_check_left = 0
+colliding_check_right = 0
+block_number = 0
 
 pygame.init()
 # x:1은 x24로 정하기 y:1은 y 18
@@ -75,7 +79,8 @@ for i in range(20):
 			spawn_ore_data[j] = 'diamond'
 
 for i in range(1274):
-	colliding.append('False')
+	colliding_left.append('False')
+	colliding_right.append('False')
 
 steve = pygame.Rect(600, 450, 24, 100)
 steve_image = pygame.image.load("image/steve.png")
@@ -109,14 +114,14 @@ class Block:
 	def check_mouse(self):
 		if not self.hide and self.border and not self.block_name == 'bedrock':
 			if steve_image_now == steve_image:
-				if self.rect.left >= steve.right:
+				if self.rect.left + 10 >= steve.right:
 					self.distance = round(math.sqrt(((steve.centerx -self.rect.centerx) ** 2) + ((steve.top -self.rect.centery) ** 2)))
 					if self.distance < 200:
 						return True
 				else:
 					return False
 			if steve_image_now == steve_image_flip:
-				if self.rect.right <= steve.left:
+				if self.rect.right - 10 <= steve.left:
 					self.distance = round(math.sqrt(((steve.centerx - self.rect.centerx) ** 2) + ((steve.top - self.rect.centery) ** 2)))
 					if self.distance < 200:
 						return True
@@ -168,21 +173,22 @@ class Block:
 			self.isjump = 0
 
 	def check_steve(self):
-		global colliding
+		global colliding_left
+		global colliding_right
 		if steve_image_now == steve_image:
 			if self.rect.collidepoint((steve.right, steve.top + 10)) and not self.hide:
-				colliding[self.number] = 'True'
+				colliding_right[self.number] = 'True'
 			elif self.rect.collidepoint((steve.right, steve.bottom - 10)) and not self.hide:
-				colliding[self.number] = 'True'
+				colliding_right[self.number] = 'True'
 			else:
-				colliding[self.number] = 'False'
+				colliding_right[self.number] = 'False'
 		elif steve_image_now == steve_image_flip:
 			if self.rect.collidepoint((steve.left, steve.top + 10)) and not self.hide:
-				colliding[self.number] = 'True'
+				colliding_left[self.number] = 'True'
 			elif self.rect.collidepoint((steve.left, steve.bottom - 10)) and not self.hide:
-				colliding[self.number] = 'True'
+				colliding_left[self.number] = 'True'
 			else:
-				colliding[self.number] = 'False'
+				colliding_left[self.number] = 'False'
 
 
 coal_list = list()
@@ -245,6 +251,11 @@ Open_store = False
 #90도: + 0 -40
 #135도: +0 -30
 while True:
+	block_number = 0
+	for j in block_list:
+		for i in j:
+			if not i.hide:
+				block_number += 1
 	keyInput = pygame.key.get_pressed()
 	mouseInput = pygame.mouse.get_pressed()
 	for event in pygame.event.get():
@@ -455,15 +466,23 @@ while True:
 							event = None
 						else:
 							break
-	colliding_check = 0
-	for i in range(1274):
-		if colliding[i] == 'True':
-			colliding_bool = True
-		if colliding[i] == 'False':
-			colliding_check += 1
-		if colliding_check == 1274:
-			colliding_bool = False
-	if keyInput[K_a] and steve.left >= 0 and not colliding_bool:
+	colliding_check_left = 0
+	colliding_check_right = 0
+	for i in range(1248):
+		if colliding_left[i] == 'True':
+			colliding_bool_left = True
+		elif colliding_left[i] == 'False':
+			colliding_check_left += 1
+		if colliding_check_left == block_number:
+			colliding_bool_left = False
+		if colliding_right[i] == 'True':
+			colliding_bool_right = True
+		elif colliding_right[i] == 'False':
+			colliding_check_right += 1
+		if colliding_check_right == block_number:
+			colliding_bool_right = False
+
+	if keyInput[K_a] and steve.left >= 0 and not colliding_bool_left:
 		steve.centerx -= 5
 		steve_hand.left -= 5
 		steve_image_now = steve_image_flip
@@ -472,7 +491,7 @@ while True:
 				steve_hand_image = hand_image_list_flip[hand_image_list.index(i)]
 				steve_hand.right = steve_hand.left + 12
 
-	if keyInput[K_d] and steve.right <= 1200 and not colliding_bool:
+	if keyInput[K_d] and steve.right <= 1200 and not colliding_bool_right:
 		steve.centerx += 5
 		steve_hand.right += 5
 		steve_image_now = steve_image
